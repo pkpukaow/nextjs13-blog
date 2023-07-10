@@ -1,0 +1,25 @@
+{
+  "navigation": {
+    "links": {
+      "cities": "Cities",
+      "experiences": "Experiences"
+    }
+  },
+  "button": {
+    "readMore": "Read more"
+  },
+  "ctaCard": {
+    "title": "Explore the world with me!",
+    "description": "Explore the world with me! I'm travelling around the world. I've visited most of the great cities of USA and currently I'm travelling in Thailand Join me!",
+    "button": "Sign Up",
+    "placeholder": "Write your email.",
+    "subscriberText1": "Join our",
+    "subscriberText2": "subscribers now!"
+  },
+  "footer": {
+    "description": "Explore around the world with PK -w-",
+    "rightsText": "All rights are reserved | Copyright",
+    "creatorText": "Made with love by",
+    "currentlyAtText": "Currently At"
+  }
+}

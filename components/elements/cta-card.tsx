@@ -1,6 +1,37 @@
+import directus from "@/lib/directus";
+import { getDictionary } from "@/lib/getDictionary";
+import { revalidateTag } from "next/cache";
 import Image from "next/image";
 
-const CTACard = () => {
+/* eslint-disable react/no-unescaped-entities */
+const CTACard = async ({ locale }: { locale: string }) => {
+  const dictionary = await getDictionary(locale as "en" | "th");
+
+  const formAction = async (formData: FormData) => {
+    "use server";
+    try {
+      const email = formData.get("email");
+      await directus.items("subscribers").createOne({
+        email,
+      });
+      revalidateTag("subscribers-count");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const subscribersCount = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}item/subscribers?meta=total_count&access_token=${process.env.ADMIN_TOKEN}`,
+    {
+      next: {
+        tags: ["subscribers-count"],
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((res) => res.meta.total_count)
+    .catch((err) => console.log(err));
+
   return (
     <div className="relative px-6 py-10 overflow-hidden rounded-md bg-slate-100">
       {/* Overlay */}
@@ -16,21 +47,36 @@ const CTACard = () => {
       <div className="relative z-20">
         <div className="text-lg font-medium">#exploretheworld</div>
         <h3 className="mt-3 text-4xl font-semibold">
-          Explore the world with me!
+          {dictionary.ctaCard.title}
         </h3>
         <p className="max-w-lg mt-2 text-lg">
-          {`Explore the world with me! I'm travelling around the world. I've visited most of the great cities of USA and currently I'm travelling in Thailand Join me!`}
+          {dictionary.ctaCard.description}
         </p>
         {/* Form */}
-        <form className="flex items-center w-full gap-2 mt-6">
+        <form
+          key={subscribersCount + "subscribers-form"}
+          action={formAction}
+          className="flex items-center w-full gap-2 mt-6"
+        >
           <input
-            placeholder="Write your email."
+            name="email"
+            type="email"
+            placeholder={dictionary.ctaCard.placeholder}
             className="w-full px-3 py-2 text-base rounded-md outline-none md:w-auto bg-white/80 focus:ring-2 ring-neutral-600 placeholder:text-sm"
           />
           <button className="px-3 py-2 rounded-md whitespace-nowrap bg-neutral-900 text-neutral-100">
-            Sign Up
+            {dictionary.ctaCard.button}
           </button>
         </form>
+
+        {/* Subscribers */}
+        <div className="mt-5 text-neutral-700">
+          {dictionary.ctaCard.subscriberText1}{" "}
+          <span className="px-2 py-1 text-sm rounded-md bg-neutral-700 text-neutral-100">
+            {subscribersCount || 0}
+          </span>{" "}
+          {dictionary.ctaCard.subscriberText2}
+        </div>
       </div>
     </div>
   );

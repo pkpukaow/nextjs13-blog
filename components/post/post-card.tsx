@@ -7,12 +7,14 @@ interface PostProps {
   post: Post;
   layout?: "vertical" | "horizontal";
   reverse?: boolean;
+  locale: string;
 }
 
 const PostCard = ({
   post,
   layout = "horizontal",
   reverse = false,
+  locale,
 }: PostProps) => {
   return (
     <Link
@@ -21,7 +23,7 @@ const PostCard = ({
           ? "grid grid-cols-1 md:grid-cols-2  items-center gap-10"
           : "space-y-10"
       }`}
-      href={`/post/${post.slug}`}
+      href={`/${locale}/post/${post.slug}`}
     >
       {/* Post Image */}
       <Image
@@ -29,12 +31,12 @@ const PostCard = ({
           reverse ? "md:order-last" : ""
         }`}
         alt={post.title}
-        src={post.image}
+        src={`${process.env.NEXT_PUBLIC_ASSETS_URL}${post.image}?key=optimised`}
         width={600}
         height={300}
       />
       {/* Post Contents */}
-      <PostContent post={post} />
+      <PostContent locale={locale} post={post} />
     </Link>
   );
 };
