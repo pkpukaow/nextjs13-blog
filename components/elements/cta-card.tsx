@@ -3,7 +3,6 @@ import { getDictionary } from "@/lib/getDictionary";
 import { revalidateTag } from "next/cache";
 import Image from "next/image";
 
-/* eslint-disable react/no-unescaped-entities */
 const CTACard = async ({ locale }: { locale: string }) => {
   const dictionary = await getDictionary(locale as "en" | "th");
 
@@ -21,7 +20,7 @@ const CTACard = async ({ locale }: { locale: string }) => {
   };
 
   const subscribersCount = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}item/subscribers?meta=total_count&access_token=${process.env.ADMIN_TOKEN}`,
+    `${process.env.NEXT_PUBLIC_API_URL}items/subscribers?meta=total_count&access_token=${process.env.ADMIN_TOKEN}`,
     {
       next: {
         tags: ["subscribers-count"],
@@ -30,7 +29,7 @@ const CTACard = async ({ locale }: { locale: string }) => {
   )
     .then((res) => res.json())
     .then((res) => res.meta.total_count)
-    .catch((err) => console.log(err));
+    .catch((error) => console.log(error));
 
   return (
     <div className="relative px-6 py-10 overflow-hidden rounded-md bg-slate-100">

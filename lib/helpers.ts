@@ -17,5 +17,9 @@ export const getReadingTime = (text: string, locale: string) => {
 };
 
 export const getRelativeDate = (date: string, locale: string) => {
-  return DateTime.fromISO(date).setLocale(locale).toRelative();
+  if (locale === "th") {
+    return DateTime.fromISO(date).setLocale("th-TH").toRelative();
+  } else if (locale === "en") {
+    return DateTime.fromISO(date).setLocale("en-US").toRelative();
+  }
 };

@@ -7,6 +7,10 @@ export const getDictionary = (locale: "en" | "th") => {
   if (!locale || locale === undefined) {
     return dictionaries["en"]();
   } else {
-    return dictionaries[locale]();
+    if (locale === "th") {
+      return dictionaries["th"]();
+    } else {
+      return dictionaries["en"]();
+    }
   }
 };

@@ -12,6 +12,8 @@ export default async function Home({
     lang: string;
   };
 }) {
+  const locale = params.lang;
+
   const getAllPosts = async () => {
     try {
       const posts = await directus.items("post").readByQuery({
@@ -22,8 +24,28 @@ export default async function Home({
           "author.last_name",
           "category.id",
           "category.title",
+          "category.translations.*",
+          "translations.*",
         ],
       });
+
+      if (locale === "en") {
+        return posts.data;
+      } else if (locale === "th") {
+        const localisedPosts = posts.data?.map((post) => {
+          return {
+            ...post,
+            title: post.translations[0].title,
+            description: post.translations[0].description,
+            body: post.translations[0].body,
+            category: {
+              ...post.category,
+              title: post.category.translations[0].title,
+            },
+          };
+        });
+        return localisedPosts;
+      }
 
       return posts.data;
     } catch (error) {
@@ -37,8 +59,6 @@ export default async function Home({
   if (!posts) {
     notFound();
   }
-
-  const locale = params.lang;
 
   return (
     <PaddingContainer>
